@@ -6,7 +6,7 @@ import sys
 from dotenv import load_dotenv
 
 from ahc_problem_digests.fetcher import fetch_problem_statement
-from ahc_problem_digests.storage import load_digest, save_digest
+from ahc_problem_digests.storage import DIGESTS_DIR, load_digest, save_digest
 from ahc_problem_digests.summarizer import create_summary
 
 
@@ -17,18 +17,42 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "contest_id",
-        help="コンテスト ID（例: ahc001）",
+        nargs="?",
+        help="コンテスト ID（例: ahc001）。--list 指定時は省略可",
     )
     parser.add_argument(
         "--force",
         action="store_true",
         help="既存の要約があっても再生成する",
     )
+    parser.add_argument(
+        "--list",
+        "-l",
+        action="store_true",
+        help="保存されている要約の一覧を表示する",
+    )
     return parser
 
 
 def run(args: argparse.Namespace) -> int:
     load_dotenv()
+
+    if args.list:
+        if not DIGESTS_DIR.exists():
+            print("保存されている要約はありません。")
+            return 0
+        for path in sorted(DIGESTS_DIR.glob("*.json")):
+            contest_id = path.stem
+            digest = load_digest(contest_id)
+            if digest:
+                title = digest.get("title", "")
+                summary = digest.get("summary", "").replace("\n", " ")
+                print(f"{contest_id.upper()} - {title} - {summary}")
+        return 0
+
+    if not args.contest_id:
+        print("エラー: コンテストIDを指定するか、--list オプションを使用してください。", file=sys.stderr)
+        return 1
 
     contest_id: str = args.contest_id
 

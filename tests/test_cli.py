@@ -6,8 +6,8 @@ import pytest
 from ahc_problem_digests.cli import build_parser, run
 
 
-def _make_args(contest_id: str, force: bool = False) -> argparse.Namespace:
-    return argparse.Namespace(contest_id=contest_id, force=force)
+def _make_args(contest_id: str | None = None, force: bool = False, list_flag: bool = False) -> argparse.Namespace:
+    return argparse.Namespace(contest_id=contest_id, force=force, list=list_flag)
 
 
 def test_run_uses_existing_digest(mocker, tmp_path, capsys):
@@ -83,3 +83,41 @@ def test_build_parser_force_flag():
     args = parser.parse_args(["ahc001", "--force"])
 
     assert args.force is True
+
+
+def test_run_list(mocker, capsys):
+    """run with --list prints all digests."""
+    mocker.patch("ahc_problem_digests.cli.load_dotenv")
+    
+    mock_dir = mocker.MagicMock()
+    mock_dir.exists.return_value = True
+    
+    from pathlib import Path
+    mock_dir.glob.return_value = [Path("digests/ahc001.json"), Path("digests/ahc002.json")]
+    
+    mocker.patch("ahc_problem_digests.cli.DIGESTS_DIR", mock_dir)
+    
+    def mock_load_digest(cid, *args, **kwargs):
+        if cid == "ahc001":
+            return {"contest_id": "ahc001", "title": "Title 1", "summary": "Summary 1\nLine 2"}
+        if cid == "ahc002":
+            return {"contest_id": "ahc002", "title": "Title 2", "summary": "Summary 2"}
+        return None
+        
+    mocker.patch("ahc_problem_digests.cli.load_digest", side_effect=mock_load_digest)
+    
+    exit_code = run(_make_args(list_flag=True))
+    
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "AHC001 - Title 1 - Summary 1 Line 2" in captured.out
+    assert "AHC002 - Title 2 - Summary 2" in captured.out
+
+def test_run_no_args(mocker, capsys):
+    """run without args and --list prints error."""
+    mocker.patch("ahc_problem_digests.cli.load_dotenv")
+    
+    exit_code = run(_make_args())
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "エラー: コンテストIDを指定するか、--list" in captured.err

@@ -21,6 +21,9 @@ uv run ahc-digest ahc001
 
 # 既存の要約を強制的に再生成する
 uv run ahc-digest ahc001 --force
+
+# 保存されている要約の一覧を表示する
+uv run ahc-digest --list
 ```
 
 要約は `digests/<contest_id>.json` に保存されます。
