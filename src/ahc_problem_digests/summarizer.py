@@ -2,14 +2,12 @@ import os
 
 from google import genai
 
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash-lite"
 SUMMARY_PROMPT_TEMPLATE = """\
-以下のAtCoder Heuristic Contest (AHC) の問題文を日本語で要約してください。
+以下のAtCoder Heuristic Contest (AHC) の問題文を140字程度の日本語で要約してください。
 次の項目を簡潔にまとめてください。
 
-1. 問題の概要（何をする問題か）
-2. 入力・出力の形式
-3. 最適化の目標（スコアの定義）
+- 問題の概要（何をする問題か）
 
 ---
 {problem_text}
