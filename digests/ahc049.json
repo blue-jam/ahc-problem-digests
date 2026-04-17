@@ -1,0 +1,5 @@
+{
+  "contest_id": "ahc049",
+  "title": "Durability-Constrained Transport",
+  "summary": "N×Nマスで、各マスにあるダンボール箱を、重さと耐久力を考慮しつつ、できるだけ少ない移動回数で(0,0)へ運び出す問題。箱を積み重ねて運ぶ場合、移動ごとに耐久力が減少する。"
+}
