@@ -5,9 +5,11 @@ from unittest.mock import MagicMock
 from ahc_problem_digests.fetcher import fetch_problem_statement
 
 
-def _make_html(task_statement_html: str) -> str:
+def _make_html(task_statement_html: str, title: str = "A - Test Problem | AtCoder") -> str:
     return f"""
-    <html><body>
+    <html>
+    <head><title>{title}</title></head>
+    <body>
       <div id="task-statement">{task_statement_html}</div>
     </body></html>
     """
@@ -21,8 +23,9 @@ def test_fetch_problem_statement_returns_text(mocker):
 
     mocker.patch("ahc_problem_digests.fetcher.requests.get", return_value=mock_response)
 
-    result = fetch_problem_statement("ahc001")
+    title, result = fetch_problem_statement("ahc001")
 
+    assert title == "Test Problem"
     assert "問題文のサンプル" in result
 
 

@@ -31,7 +31,7 @@ def test_run_fetches_and_saves_when_no_existing_digest(mocker, capsys):
     mocker.patch("ahc_problem_digests.cli.load_digest", return_value=None)
     mocker.patch(
         "ahc_problem_digests.cli.fetch_problem_statement",
-        return_value="問題文テキスト",
+        return_value=("Title 2", "問題文テキスト"),
     )
     mocker.patch(
         "ahc_problem_digests.cli.create_summary",
@@ -42,7 +42,7 @@ def test_run_fetches_and_saves_when_no_existing_digest(mocker, capsys):
     exit_code = run(_make_args("ahc002"))
 
     assert exit_code == 0
-    mock_save.assert_called_once_with("ahc002", "新しい要約")
+    mock_save.assert_called_once_with("ahc002", "Title 2", "新しい要約")
     captured = capsys.readouterr()
     assert "新しい要約" in captured.out
 
@@ -52,7 +52,7 @@ def test_run_force_regenerates_summary(mocker, capsys):
     mocker.patch("ahc_problem_digests.cli.load_dotenv")
     mocker.patch(
         "ahc_problem_digests.cli.fetch_problem_statement",
-        return_value="問題文",
+        return_value=("Title 3", "問題文"),
     )
     mocker.patch(
         "ahc_problem_digests.cli.create_summary",
@@ -65,7 +65,7 @@ def test_run_force_regenerates_summary(mocker, capsys):
 
     assert exit_code == 0
     mock_load.assert_not_called()
-    mock_save.assert_called_once_with("ahc003", "再生成された要約")
+    mock_save.assert_called_once_with("ahc003", "Title 3", "再生成された要約")
 
 
 def test_build_parser_defaults():

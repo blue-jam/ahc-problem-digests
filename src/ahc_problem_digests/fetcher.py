@@ -1,17 +1,19 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup
 
 ATCODER_BASE_URL = "https://atcoder.jp"
 
 
-def fetch_problem_statement(contest_id: str) -> str:
-    """Fetch the problem statement text for an AHC contest.
+def fetch_problem_statement(contest_id: str) -> tuple[str, str]:
+    """Fetch the problem statement text and title for an AHC contest.
 
     Args:
         contest_id: The contest ID (e.g. "ahc001").
 
     Returns:
-        The plain-text content of the task statement.
+        A tuple of (title, plain-text content of the task statement).
 
     Raises:
         requests.HTTPError: If the request fails.
@@ -28,4 +30,9 @@ def fetch_problem_statement(contest_id: str) -> str:
             f"Task statement element not found for contest '{contest_id}'. "
             f"URL: {url}"
         )
-    return task_statement.get_text(separator="\n")
+    
+    title_tag = soup.title
+    title = title_tag.text.replace(" | AtCoder", "").strip() if title_tag else contest_id
+    title = re.sub(r"^[A-Z]\s*-\s*", "", title)
+
+    return title, task_statement.get_text(separator="\n")

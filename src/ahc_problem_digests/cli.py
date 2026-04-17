@@ -40,12 +40,12 @@ def run(args: argparse.Namespace) -> int:
             return 0
 
     print(f"問題文を取得しています ({contest_id})...")
-    problem_text = fetch_problem_statement(contest_id)
+    title, problem_text = fetch_problem_statement(contest_id)
 
     print("要約を生成しています...")
     summary = create_summary(problem_text)
 
-    save_digest(contest_id, summary)
+    save_digest(contest_id, title, summary)
     print(f"要約を保存しました（digests/{contest_id}.json）:")
     print(summary)
     return 0
