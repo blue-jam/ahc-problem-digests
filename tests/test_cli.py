@@ -6,8 +6,8 @@ import pytest
 from ahc_problem_digests.cli import build_parser, run
 
 
-def _make_args(contest_id: str | None = None, force: bool = False, list_flag: bool = False) -> argparse.Namespace:
-    return argparse.Namespace(contest_id=contest_id, force=force, list=list_flag)
+def _make_args(command_or_id: str | None = None, target: str | None = None, force: bool = False, list_flag: bool = False) -> argparse.Namespace:
+    return argparse.Namespace(command_or_id=command_or_id, target=target, force=force, list=list_flag)
 
 
 def test_run_uses_existing_digest(mocker, tmp_path, capsys):
@@ -73,7 +73,7 @@ def test_build_parser_defaults():
     parser = build_parser()
     args = parser.parse_args(["ahc001"])
 
-    assert args.contest_id == "ahc001"
+    assert args.command_or_id == "ahc001"
     assert args.force is False
 
 

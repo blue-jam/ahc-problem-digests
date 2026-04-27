@@ -16,9 +16,14 @@ def build_parser() -> argparse.ArgumentParser:
         description="AHC の問題文を Gemini API で要約して保存する",
     )
     parser.add_argument(
-        "contest_id",
+        "command_or_id",
         nargs="?",
-        help="コンテスト ID（例: ahc001）。--list 指定時は省略可",
+        help="コマンド（aggregate-votes 等）またはコンテスト ID（例: ahc001）。--list 指定時は省略可",
+    )
+    parser.add_argument(
+        "target",
+        nargs="?",
+        help="コマンドのターゲット（aggregate-votes に使用。例: ahc001-063）",
     )
     parser.add_argument(
         "--force",
@@ -50,11 +55,23 @@ def run(args: argparse.Namespace) -> int:
                 print(f"{contest_id.upper()} - {title} - {summary}")
         return 0
 
-    if not args.contest_id:
+    if not args.command_or_id:
         print("エラー: コンテストIDを指定するか、--list オプションを使用してください。", file=sys.stderr)
         return 1
 
-    contest_id: str = args.contest_id
+    if args.command_or_id == "aggregate-votes":
+        if not args.target:
+            print("エラー: aggregate-votes にはターゲット（例: ahc001-063）を指定してください。", file=sys.stderr)
+            return 1
+        from ahc_problem_digests.vote_aggregator import process_votes
+        try:
+            process_votes(args.target)
+        except Exception as e:
+            print(f"エラー: {e}", file=sys.stderr)
+            return 1
+        return 0
+
+    contest_id: str = args.command_or_id
 
     if not args.force:
         existing = load_digest(contest_id)
