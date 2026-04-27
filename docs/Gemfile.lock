@@ -310,6 +310,7 @@ DEPENDENCIES
   base64
   github-pages
   jekyll
+  minima (~> 2.5)
   webrick (~> 1.8)
 
 CHECKSUMS
