@@ -107,7 +107,7 @@ def generate_markdown(aggregated_data: List[Dict[str, Any]], title: str) -> str:
         
         # Heading for the problem (use ID as HTML id for anchoring)
         problem_id = short_name.split(" ")[0].lower() if " " in short_name else short_name.lower()
-        lines.append(f"### <a id=\"{problem_id}\"></a>{escaped_short_name} ({data['count']}票)")
+        lines.append(f"### <a id=\"{problem_id}\"></a>[{escaped_short_name}](https://atcoder.jp/contests/{problem_id}) ({data['count']}票)")
         lines.append("")
         if escaped_desc:
             lines.append(f"> {escaped_desc}")

@@ -74,6 +74,6 @@ def test_generate_markdown():
     
     assert "title: AHC_TEST 投票結果" in md
     assert "| 1 | [AHC001 \\- Ad](#ahc001) | 2 |" in md
-    assert '### <a id="ahc001"></a>AHC001 \\- Ad (2票)' in md
+    assert '### <a id="ahc001"></a>[AHC001 \\- Ad](https://atcoder.jp/contests/ahc001) (2票)' in md
     assert "> desc1" in md
     assert "- **alice**: fun" in md
