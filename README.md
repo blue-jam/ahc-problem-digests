@@ -1,6 +1,7 @@
 # ahc-problem-digests
 
 AtCoder Heuristic Contest (AHC) の問題文を Gemini API で日本語に要約して保存するツール。
+また、投票結果（CSV）を集計してGitHub Pages向けのMarkdownを出力する機能も備えています。
 
 ## セットアップ
 
@@ -24,9 +25,12 @@ uv run ahc-digest ahc001 --force
 
 # 保存されている要約の一覧を表示する
 uv run ahc-digest --list
+
+# 投票結果（CSV）を集計して Markdown を生成する（例: votes/ahc001-063.csv）
+uv run ahc-digest aggregate-votes ahc001-063
 ```
 
-要約は `digests/<contest_id>.json` に保存されます。
+要約は `digests/<contest_id>.json` に、集計結果は `docs/<target>/index.md` に保存されます。
 
 ## テスト
 
