@@ -32,6 +32,18 @@ uv run ahc-digest aggregate-votes ahc001-063
 
 要約は `digests/<contest_id>.json` に、集計結果は `docs/<target>/index.md` に保存されます。
 
+## GitHub Pages ローカルプレビュー
+
+`docs/` ディレクトリ内で Jekyll を使用して、生成されたサイトをローカルでプレビューできます。Ruby と Bundler が必要です。
+
+```bash
+cd docs/
+bundle install
+bundle exec jekyll serve
+```
+
+実行後、ブラウザで `http://localhost:4000` にアクセスするとプレビューを確認できます。
+
 ## テスト
 
 ```bash

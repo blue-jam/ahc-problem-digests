@@ -1,0 +1,7 @@
+title: AHC Problem Digests
+description: AtCoder Heuristic Contestの要約や投票結果の集計
+theme: jekyll-theme-minimal
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
